@@ -1,0 +1,53 @@
+<?php
+/**
+ * @file
+ * A registration form.
+ */
+
+/**
+ * Implements hook_form_alter().
+ */
+function registration_form_alter(&$form, &$form_state, $form_id) {
+  global $nid;
+  if (!($form_id == 'user_register_form' || $form_id == 'user_profile_form')) {
+    return;
+  }
+  dpm($form);
+  $form['account']['mail']= array(
+    '#type' => 'textfield',
+    '#title' => t('Ваш имейл:'),
+    '#default_value' => 'email',
+  );
+  $form['account']['name']= array(
+    '#type' => 'textfield',
+    '#title' => t('Имя:'),
+    '#default_value' => 'Имя',
+  );
+  $form['account']['second_name']= array(
+    '#type' => 'textfield',
+    '#title' => t('Фамилия:'),
+    '#default_value' => 'Фамилия',
+  );
+  $form['account']['father_name']= array(
+    '#type' => 'textfield',
+    '#title' => t('Отчество:'),
+    '#default_value' => 'Отчество',
+  );
+  $form['account']['your_age']= array(
+    '#type' => 'textfield',
+    '#title' => t('Your age'),
+    '#default_value' => 0,
+  );
+  $form['#validate'][] = 'registration_user_form_validate';
+  $form['account']['legal_agreement'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Legal agreement'),
+  );
+  $form['account']['legal_agreement']['decision'] = array(
+    '#type' => 'radios',
+    '#title' => t('By registering at %site-name, you agree with giving 100$ to our fond',
+      array('%site-name' => variable_get('site_name', 'drupal'))),
+    '#default_value' => 0,
+    '#options' => array(t('I disagree'), t('I agree')),
+  );
+}
