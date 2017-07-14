@@ -13,41 +13,100 @@ function registration_form_alter(&$form, &$form_state, $form_id) {
     return;
   }
   dpm($form);
-  $form['account']['mail']= array(
-    '#type' => 'textfield',
-    '#title' => t('Ваш имейл:'),
-    '#default_value' => 'email',
+  $form['account']['name']['#weight']=0;
+  $form['account']['mail']['#weight']=1;
+  $form['account']['password']= array(
+    '#type' => 'password_confirm',
+    '#maxlength' => 64,
+    '#size' => 15,
+    '#weight' => 2,
+    '#required' => TRUE,
   );
-  $form['account']['name']= array(
+  $form['account']['name2']= array(
     '#type' => 'textfield',
-    '#title' => t('Имя:'),
-    '#default_value' => 'Имя',
+    '#title' => t('First name:'),
+    '#weight' => 3,
+    '#required' => TRUE,
   );
-  $form['account']['second_name']= array(
+  $form['account']['last_name']= array(
     '#type' => 'textfield',
-    '#title' => t('Фамилия:'),
-    '#default_value' => 'Фамилия',
+    '#title' => t('Last name:'),
+    '#weight' => 4,
+    '#required' => TRUE,
   );
-  $form['account']['father_name']= array(
-    '#type' => 'textfield',
-    '#title' => t('Отчество:'),
-    '#default_value' => 'Отчество',
-  );
+
   $form['account']['your_age']= array(
     '#type' => 'textfield',
-    '#title' => t('Your age'),
-    '#default_value' => 0,
+    '#title' => t('Your age:'),
+    '#default_value' => 18,
+    '#size' => 3,
+    '#weight' => 6,
+    '#required' => TRUE,
+  );
+  $form['account']['your_address']= array(
+    '#type' => 'textfield',
+    '#title' => t('Your address:'),
+    '#weight' => 7,
+    '#required' => TRUE,
+  );
+  $form['account']['types_of_cats'] = array(
+    '#weight' => 8,
+    '#type' => 'checkboxes',
+    '#title' => t('Choose your favourite cat breeds:'),
+    '#options' => array(
+      t('American Bobtail Cat'),
+      t('Bengal Cats'),
+      t('British Shorthair'),
+      t('Sphynx'),
+      t('Somali'),
+      t('Persian'),
+      t('European Burmese'),
+      t('Devon Rex'),
+      t('Without breed'),
+      t('I do not have a favourite breed' ),
+      'other' => t('Other'),
+      ),
+  );
+  $form['account']['other']= array(
+    '#type' => 'textfield',
+    '#weight' => 9,
+    '#states' => array(
+      'visible' => array(
+        ':input[name="types_of_cats[other]"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+  $form['account']['information']= array(
+    '#type' => 'textfield',
+    '#title' => t('Please give us some information about yourself.'),
+    '#weight' => 10,
+    '#required' => TRUE,
   );
   $form['#validate'][] = 'registration_user_form_validate';
-  $form['account']['legal_agreement'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Legal agreement'),
-  );
-  $form['account']['legal_agreement']['decision'] = array(
+  $form['account']['agreement'] = array(
+    '#weight' => 10,
     '#type' => 'radios',
-    '#title' => t('By registering at %site-name, you agree with giving 100$ to our fond',
+    '#title' => t('By registering at %site-name, you should agree to like cats:))',
       array('%site-name' => variable_get('site_name', 'drupal'))),
     '#default_value' => 0,
     '#options' => array(t('I disagree'), t('I agree')),
   );
+
+  /**
+   * Implements hook_user_form_validate().
+   */
+  function registration_user_form_validate($form, &$form_state) {
+    global $user;
+    if ($form_state['input']['agreement'] <> 1) {
+      form_set_error('agreement', t('You must agree!'));
+    }
+    else {
+      watchdog('user', t('User %user agreed to legal terms',
+        array('%user' => $user->name)));
+    }
+    $minimum_length = 100;
+    if (strlen($form_state['values']['information']) < $minimum_length) {
+      form_set_error('information', 'The name is too short; minimum length is 100 characters.');
+    }
+  }
 }
