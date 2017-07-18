@@ -7285,6 +7285,9 @@ function drupal_schema_fields_sql($table, $prefix = NULL) {
  */
 function drupal_write_record($table, &$record, $primary_keys = array()) {
   // Standardize $primary_keys to an array.
+   if ($table == 'users') {
+     dd(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
+   }
   if (is_string($primary_keys)) {
     $primary_keys = array($primary_keys);
   }

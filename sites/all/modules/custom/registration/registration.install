@@ -1,0 +1,81 @@
+<?php
+
+/**
+ * @file
+ * Установка и удаление модуля.
+ */
+
+/**
+ * @param $schema
+ */
+function registration_schema_alter(&$schema) {
+  $schema['users']['fields']['name2']= array(
+    'type' => 'varchar',
+    'length' => 60,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => "User's name.",
+  );
+  $schema['users']['fields']['last_name']= array(
+    'type' => 'varchar',
+    'length' => 60,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => "User's last name.",
+  );
+  $schema['users']['fields']['your_age']= array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+    'description' => "User's age.",
+  );
+  $schema['users']['fields']['your_address']= array(
+    'type' => 'varchar',
+    'length' => 254,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => "User's address.",
+  );
+  $schema['users']['fields']['types_of_cats']= array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => "Types of cats.",
+  );
+  $schema['users']['fields']['information']= array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => "Information about user.",
+  );
+
+}
+
+/**
+ * Implements hook_install().
+ */
+function registration_install() {
+  $new_schema = array();
+  registration_schema_alter( $new_schema );
+  $new_schema = $new_schema['users']['fields'];
+  foreach ($new_schema as $key => $field)  {
+   if (!db_field_exists('users', $key)) {
+     db_add_field('users', $key, $field);
+   }
+ }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function registration_uninstall() {
+  $new_schema = array();
+  registration_schema_alter( $new_schema );
+  if( isset($new_schema['users']['fields']) ) :
+    foreach( $new_schema['users']['fields'] as $key => $field) :
+      db_drop_field( 'users', $key );
+    endforeach;
+  endif;
+}
