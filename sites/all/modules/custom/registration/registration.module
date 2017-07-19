@@ -8,37 +8,35 @@
  * Implements hook_form_alter().
  */
 function registration_form_alter(&$form, &$form_state, $form_id) {
-  global $nid;
-  $user=$form_state['user'];
   if (!($form_id == 'user_register_form' || $form_id == 'user_profile_form')) {
     return;
   }
-  $n2=$ln=$ya=$yad=$toc=$inf=$agr='';
-  if (!empty ($user)){
-    dpm($user,'user');
-    $n2 = $user->name2;
+  $n2=$ln=$ya=$yad=$inf=$agr='';
+  $toc=$ot=NULL;
+  if (!empty ($form_state['user'])){
+
+    $n2 = $form_state['user']->name2;
     $ln = $form_state['user']->last_name;
     $ya = $form_state['user']->your_age;
     $yad = $form_state['user']->your_address;
-    $toc = $form_state['user']->types_of_cats;
+    $toc = unserialize($form_state['user']->types_of_cats);
     $inf = $form_state['user']->information;
     $agr = $form_state['user']->agreement;
+    $ot=$toc[11];
   }
-//  dpm($form);
-//  dpm($form_state, '$form_state');
   $form['account']['name']['#weight'] = 0;
   $form['account']['mail']['#weight'] = 1;
   $form['account']['name2'] = array(
     '#type' => 'textfield',
     '#title' => t('First name:'),
-    '#weight' => 3,
+    '#weight' => 2,
     '#required' => TRUE,
     '#default_value' => $n2,
   );
   $form['last_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Last name:'),
-    '#weight' => 4,
+    '#weight' => 3,
     '#required' => TRUE,
     '#default_value' => $ln,
   );
@@ -47,19 +45,19 @@ function registration_form_alter(&$form, &$form_state, $form_id) {
     '#type' => 'textfield',
     '#title' => t('Your age:'),
     '#size' => 3,
-    '#weight' => 6,
+    '#weight' => 4,
     '#required' => TRUE,
     '#default_value' => $ya,
   );
   $form['your_address'] = array(
     '#type' => 'textfield',
     '#title' => t('Your address:'),
-    '#weight' => 7,
+    '#weight' => 5,
     '#required' => TRUE,
     '#default_value' => $yad,
   );
   $form['types_of_cats'] = array(
-    '#weight' => 8,
+    '#weight' => 6,
     '#type' => 'checkboxes',
     '#title' => t('Choose your favourite cat breeds:'),
     '#options' => array(
@@ -73,41 +71,41 @@ function registration_form_alter(&$form, &$form_state, $form_id) {
       t('Devon Rex'),
       t('Without breed'),
       t('I do not have a favourite breed'),
-      'other' => t('Other'),
+      t('Other'),
     ),
-    '#default_value' => $toc,
+      '#default_value' => $toc,
   );
   $form['other'] = array(
     '#type' => 'textfield',
-    '#weight' => 9,
+    '#weight' => 7,
     '#states' => array(
       'visible' => array(
-        ':input[name="types_of_cats[other]"]' => array('checked' => TRUE),
+        ':input[name="types_of_cats[10]"]' => array('checked' => TRUE),
       ),
     ),
+    '#default_value' => $ot,
   );
   $form['information'] = array(
     '#type' => 'textfield',
     '#title' => t('Please give us some information about yourself.'),
-    '#weight' => 10,
+    '#weight' => 8,
     '#required' => TRUE,
     '#default_value' => $inf,
   );
   $form['#validate'][] = 'registration_user_form_validate';
   $form['agreement'] = array(
-    '#weight' => 10,
+    '#weight' => 9,
     '#type' => 'radios',
     '#title' => t('By registering at %site-name, you should agree to like cats:))',
       array('%site-name' => variable_get('site_name', 'drupal'))),
     '#options' => array(t('I disagree'), t('I agree')),
     '#default_value' => $agr,
   );
-  $form['#submit'][] = 'registration_form_submit';
-  dpm($form);
+  array_unshift($form['#submit'],'registration_form_submit');
 }
 
 /**
- * Implements hook_user_form_validate().
+ * Function registration_user_form_validate().
  */
 function registration_user_form_validate($form, &$form_state) {
   if ($form_state['input']['agreement'] <> 1) {
@@ -118,24 +116,12 @@ function registration_user_form_validate($form, &$form_state) {
     form_set_error('information', 'The name is too short; minimum length is 50 characters.');
   }
 }
-  /**
-   * Implements hook_user_form_submit().
-   */
-  function registration_form_submit($form, &$form_state) {
-dpm($form_state, '$form_state');
-    $user = $form_state['user'];
-    $uid = $form_state['values']['uid'];
-    dpm($uid, ' uiud');
-   /** db_update('users')
-      ->fields(array(
-        'name2' => 16,
-        'last_name' => 17,
-        'your_age' => 18,
-        'address' => 19,
-        'types_of_cats' => 20,
-        'information' => 21,)
-      )
-      ->condition('nid', $uid)
-      ->execute();*/
+
+/**
+ * Function registration_form_submit().
+ */
+function registration_form_submit($form, &$form_state) {
+    array_push($form_state['values']['types_of_cats'], $form_state['values']['other']);
+    $form_state['values']['types_of_cats'] = serialize($form_state['values']['types_of_cats']);
     drupal_set_message(t('The form has been submitted.'));
   }

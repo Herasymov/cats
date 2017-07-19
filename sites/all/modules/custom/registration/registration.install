@@ -55,7 +55,7 @@ function registration_schema_alter(&$schema) {
     'length' => 255,
     'not null' => TRUE,
     'default' => '',
-    'description' => "agreement.",
+    'description' => "Agreement.",
   );
 
 }
