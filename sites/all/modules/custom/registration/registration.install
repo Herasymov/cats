@@ -38,7 +38,7 @@ function registration_schema_alter(&$schema) {
   );
   $schema['users']['fields']['types_of_cats']= array(
     'type' => 'varchar',
-    'length' => 255,
+    'length' => 500,
     'not null' => TRUE,
     'default' => '',
     'description' => "Types of cats.",
@@ -49,6 +49,13 @@ function registration_schema_alter(&$schema) {
     'not null' => TRUE,
     'default' => '',
     'description' => "Information about user.",
+  );
+  $schema['users']['fields']['agreement']= array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => "agreement.",
   );
 
 }
