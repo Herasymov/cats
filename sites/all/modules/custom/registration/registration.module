@@ -22,7 +22,7 @@ function registration_form_alter(&$form, &$form_state, $form_id) {
     $toc = unserialize($form_state['user']->types_of_cats);
     $inf = $form_state['user']->information;
     $agr = $form_state['user']->agreement;
-    $ot=$toc[11];
+    $ot= array_pop($toc);
   }
   $form['account']['name']['#weight'] = 0;
   $form['account']['mail']['#weight'] = 1;
@@ -71,7 +71,7 @@ function registration_form_alter(&$form, &$form_state, $form_id) {
       t('Devon Rex'),
       t('Without breed'),
       t('I do not have a favourite breed'),
-      t('Other'),
+      'other_type' => t('Other'),
     ),
       '#default_value' => $toc,
   );
@@ -80,7 +80,7 @@ function registration_form_alter(&$form, &$form_state, $form_id) {
     '#weight' => 7,
     '#states' => array(
       'visible' => array(
-        ':input[name="types_of_cats[10]"]' => array('checked' => TRUE),
+        ':input[name="types_of_cats[other_type]"]' => array('checked' => TRUE),
       ),
     ),
     '#default_value' => $ot,
@@ -121,7 +121,8 @@ function registration_user_form_validate($form, &$form_state) {
  * Function registration_form_submit().
  */
 function registration_form_submit($form, &$form_state) {
-    array_push($form_state['values']['types_of_cats'], $form_state['values']['other']);
-    $form_state['values']['types_of_cats'] = serialize($form_state['values']['types_of_cats']);
-    drupal_set_message(t('The form has been submitted.'));
+  array_push($form_state['values']['types_of_cats'], $form_state['values']['other']);
+  $form_state['values']['types_of_cats'] = serialize($form_state['values']['types_of_cats']);
+  drupal_set_message(t('The form has been submitted.'));
+  dpm($form_state,'fdgdf');
   }
