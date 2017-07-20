@@ -9,7 +9,7 @@
  */
 function registration_form_alter(&$form, &$form_state, $form_id) {
   if (!($form_id == 'user_register_form' || $form_id == 'user_profile_form')) {
-    return;
+    return 0;
   }
   $n2=$ln=$ya=$yad=$inf=$agr='';
   $toc=$ot=NULL;
@@ -39,6 +39,7 @@ function registration_form_alter(&$form, &$form_state, $form_id) {
     '#weight' => 3,
     '#required' => TRUE,
     '#default_value' => $ln,
+    '#location' => 'http://cats/user/21#overlay-context=node',
   );
 
   $form['your_age'] = array(
@@ -60,19 +61,8 @@ function registration_form_alter(&$form, &$form_state, $form_id) {
     '#weight' => 6,
     '#type' => 'checkboxes',
     '#title' => t('Choose your favourite cat breeds:'),
-    '#options' => array(
-      t('American Bobtail Cat'),
-      t('Bengal Cats'),
-      t('British Shorthair'),
-      t('Sphynx'),
-      t('Somali'),
-      t('Persian'),
-      t('European Burmese'),
-      t('Devon Rex'),
-      t('Without breed'),
-      t('I do not have a favourite breed'),
-      'other_type' => t('Other'),
-    ),
+    '#created' => REQUEST_TIME,
+    '#options' => catsarray(),
       '#default_value' => $toc,
   );
   $form['other'] = array(
@@ -105,6 +95,25 @@ function registration_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
+ * Function catsarray().
+ */
+function catsarray() {
+  return array(
+    t('American Bobtail Cat'),
+    t('Bengal Cats'),
+    t('British Shorthair'),
+    t('Sphynx'),
+    t('Somali'),
+    t('Persian'),
+    t('European Burmese'),
+    t('Devon Rex'),
+    t('Without breed'),
+    t('I do not have a favourite breed'),
+    'other_type' => t('Other'),
+  );
+}
+
+/**
  * Function registration_user_form_validate().
  */
 function registration_user_form_validate($form, &$form_state) {
@@ -125,3 +134,45 @@ function registration_form_submit($form, &$form_state) {
   $form_state['values']['types_of_cats'] = serialize($form_state['values']['types_of_cats']);
   drupal_set_message(t('The form has been submitted.'));
   }
+
+/**
+ * Implements hook_preprocess_hook().
+ */
+function registration_preprocess_user_profile(&$variables, &$form) {
+  $variables['user_profile']['user_picture']['#weight'] = 0;
+  $variables['user_profile']['summary']['#weight'] = 7;
+  $variables['user_profile']['name2'] = array(
+    '#markup' => '<div><strong>Name: </strong>'. $variables['elements']['#account']->name2.'</div>',
+    '#weight' => 1,
+  );
+  $variables['user_profile']['last_name'] = array(
+    '#markup' => '<div><strong>Last name: </strong>'. $variables['elements']['#account']->last_name.'</div>',
+    '#weight' => 2,
+  );
+  $variables['user_profile']['your_age'] = array(
+    '#markup' => '<div><strong>Age: </strong>'. $variables['elements']['#account']->your_age .'</div>',
+    '#weight' => 3,
+  );
+  $variables['user_profile']['your_address'] = array(
+    '#markup' => '<div><strong>Address: </strong>'. $variables['elements']['#account']->your_address .'</div>',
+    '#weight' => 4,
+  );
+  $variables['user_profile']['information'] = array(
+    '#markup' => '<div><strong>Short bio: </strong>'. $variables['elements']['#account']->information .'</div>',
+    '#weight' => 5,
+  );
+  $cats = array();
+  $cats_array = catsarray();
+  $selected_cats = $variables['elements']['#account']->types_of_cats;
+  $selected_cats = unserialize($selected_cats);
+  $i=0;
+  foreach ($cats_array as $key => $cat) {
+    if ($selected_cats[$i]==$i) $cats[] = $cat;
+    $i++;
+  }
+  if ($selected_cats[10]!=NULL) $cats[] = $selected_cats[10];
+  $variables['user_profile']['types_of_cats'] = array(
+    '#markup' => '<div><strong>Favourite cat breeds: </strong> <br>'. implode('<br>', $cats) . '</div>',
+    '#weight' => 6,
+  );
+}
