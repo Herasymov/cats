@@ -124,5 +124,4 @@ function registration_form_submit($form, &$form_state) {
   array_push($form_state['values']['types_of_cats'], $form_state['values']['other']);
   $form_state['values']['types_of_cats'] = serialize($form_state['values']['types_of_cats']);
   drupal_set_message(t('The form has been submitted.'));
-  dpm($form_state,'fdgdf');
   }
