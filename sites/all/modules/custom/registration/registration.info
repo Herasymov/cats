@@ -2,5 +2,4 @@ name = Registration
 description = Registration new account.
 package = Pro Drupal Development
 core = 7.x
-files[] = registration.install
 files[] = registration.module
