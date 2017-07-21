@@ -144,7 +144,7 @@ function registration_form_submit($form, &$form_state) {
  */
 function registration_preprocess_user_profile(&$variables, &$form) {
   $variables['user_profile']['user_picture']['#weight'] = 0;
-  $variables['user_profile']['summary']['#weight'] = 7;
+  $variables['user_profile']['summary']['#access'] = FALSE;
   $variables['user_profile']['name2'] = array(
     '#markup' => '<div><strong> Name: </strong>' . $variables['elements']['#account']->name2 . '</div>',
     '#weight' => 1,
