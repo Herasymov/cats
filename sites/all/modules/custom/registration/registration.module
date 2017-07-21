@@ -22,7 +22,9 @@ function registration_form_alter(&$form, &$form_state, $form_id) {
     $toc = unserialize($form_state['user']->types_of_cats);
     $inf = $form_state['user']->information;
     $agr = $form_state['user']->agreement;
-    $ot = array_pop($toc);
+    if (!empty($toc)) {
+      $ot = array_pop($toc);
+    }
   }
   $form['account']['name']['#weight'] = 0;
   $form['account']['mail']['#weight'] = 1;
@@ -63,8 +65,10 @@ function registration_form_alter(&$form, &$form_state, $form_id) {
     '#title' => t('Choose your favourite cat breeds:'),
     '#created' => REQUEST_TIME,
     '#options' => registration_cats_array(),
-    '#default_value' => $toc,
   );
+  if ($toc != []) {
+    $form['types_of_cats']['#default_value'] = $toc;
+  }
   $form['other'] = array(
     '#type' => 'textfield',
     '#weight' => 7,
@@ -167,10 +171,14 @@ function registration_preprocess_user_profile(&$variables, &$form) {
   $selected_cats = unserialize($selected_cats);
   $i = 0;
   foreach ($cats_array as $key => $cat) {
-    if ($selected_cats[$i] == $i) $cats[] = $cat;
+    if ($selected_cats[$i] == $i) {
+      $cats[] = $cat;
+    }
     $i++;
   }
-  if ($selected_cats[10] != NULL) $cats[] = $selected_cats[10];
+  if ($selected_cats[10] != NULL) {
+    $cats[] = $selected_cats[10];
+  }
   $variables['user_profile']['types_of_cats'] = array(
     '#markup' => '<div><strong>Favourite cat breeds: </strong> <br>' . implode('<br>', $cats) . '</div>',
     '#weight' => 6,
