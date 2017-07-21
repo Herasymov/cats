@@ -9,10 +9,11 @@
  */
 function registration_form_alter(&$form, &$form_state, $form_id) {
   if (!($form_id == 'user_register_form' || $form_id == 'user_profile_form')) {
-    return 0;
+    return NULL;
   }
   $n2=$ln=$ya=$yad=$inf=$agr='';
-  $toc=$ot=NULL;
+  $ot=NULL;
+  $toc=[];
   if (!empty ($form_state['user'])){
 
     $n2 = $form_state['user']->name2;
@@ -62,7 +63,7 @@ function registration_form_alter(&$form, &$form_state, $form_id) {
     '#type' => 'checkboxes',
     '#title' => t('Choose your favourite cat breeds:'),
     '#created' => REQUEST_TIME,
-    '#options' => catsarray(),
+    '#options' => registration_cats_array(),
       '#default_value' => $toc,
   );
   $form['other'] = array(
@@ -95,9 +96,9 @@ function registration_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * Function catsarray().
+ * Function registration_cats_array().
  */
-function catsarray() {
+function registration_cats_array() {
   return array(
     t('American Bobtail Cat'),
     t('Bengal Cats'),
@@ -162,7 +163,7 @@ function registration_preprocess_user_profile(&$variables, &$form) {
     '#weight' => 5,
   );
   $cats = array();
-  $cats_array = catsarray();
+  $cats_array = registration_cats_array();
   $selected_cats = $variables['elements']['#account']->types_of_cats;
   $selected_cats = unserialize($selected_cats);
   $i=0;
