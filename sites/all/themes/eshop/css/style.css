@@ -1,0 +1,148 @@
+body {
+  background: url(/sites/default/files/12049_foto.jpg);
+  background-attachment: fixed;
+  font: 14px/22px Verdana, Arial, sans-serif;
+  text-align: center;
+  color: #6b6b6b;
+  font-size-adjust: none;
+  font-stretch: normal;
+  margin: 0;
+}
+
+#site_content {
+  width: 995px;
+  text-align: justify;
+  margin: 35px auto;
+}
+
+#header {
+  background: url(/sites/default/files/17791_foto.gif) no-repeat bottom rgba(255,242,224,0.80);
+  border-radius: 10px 10px 0 0;
+  box-shadow: 2px 2px 12px #40310a;
+  margin: 0 5px;
+}
+
+ul, #logo_box div, table.add_rating {
+  margin: 0;
+  padding: 0;
+}
+
+div.lb_60 {
+  width: 60%;
+  float: left;
+}
+
+img.logo_img {
+  border: 0;
+  margin: 10px 0 0 15px;
+  padding: 0;
+}
+
+p.logo_p {
+  color: #875695;
+  font-size: 19px;
+  float: left;
+  font-weight: 700;
+  margin: 0 0 5px 15px;
+  padding: 0;
+}
+
+div.lb_20 {
+  width: 20%;
+  float: left;
+}
+
+div.logo_text {
+  line-height: 18px;
+  font-size: 11px;
+  margin: 0;
+  padding: 0;
+}
+
+a.logo_a {
+  text-decoration: none;
+}
+
+a, span.goods_subscribe_link {
+  color: #6b5030;
+}
+
+span.logo_text_bg {
+  background: rgba(255,242,224,0.80);
+  border-radius: 3px;
+  padding: 0 3px;
+}
+
+#top_menu {
+  clear: both;
+  border-top-color: rgba(220,219,213,0);
+  border-bottom-color: #dcdbd5;
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  border-top-style: solid;
+  border-bottom-style: solid;
+  margin: 0 5px;
+  padding: 7px 0;
+}
+
+ul, menu, dir {
+  display: block;
+  list-style-type: disc;
+  -webkit-margin-before: 1em;
+  -webkit-margin-after: 1em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  -webkit-padding-start: 40px;
+}
+
+.side_box {
+  float: left;
+  width: 28%;
+  text-align: left;
+  margin: 5px 0;
+  padding: 0;
+}
+
+.element, .element_no_pd {
+  background: #fff;
+  box-shadow: 2px 2px 12px #40310a;
+  margin: 10px 5px;
+  padding: 0 0 1px;
+}
+
+ul.side_menu {
+  padding-top: 10px;
+}
+
+#cs_side_contacts, #cs_side_filter {
+  background: #fff7db;
+}
+
+div.element_no_pd {
+  font-size: 13px;
+  padding: 0;
+}
+
+.element_no_pd {
+  box-shadow: 2px 2px 12px #40310a;
+  margin: 10px 5px;
+}
+
+#cs_side_store, #cs_side_search_art {
+  background: #fff;
+}
+
+.content_box {
+  float: left;
+  width: 72%;
+  margin: 5px 0;
+  padding: 0;
+}
+
+.news {
+  background: #fff;
+  clear: both;
+  box-shadow: 2px 2px 12px #40310a;
+  margin: 0 5px;
+  padding: 5px 10px;
+}
